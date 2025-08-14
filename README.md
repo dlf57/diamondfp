@@ -1,3 +1,5 @@
+<center><img src='diamondfp.png' width='7.5%'></center>
+
 # diamondfp
 **Comparing baseball players like molecules!** 
 
