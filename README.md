@@ -1,4 +1,4 @@
-<center><img src='diamondfp.png' width='7.5%'></center>
+<center><img src='diamondfp.png' width='20%'></center>
 
 # diamondfp
 **Comparing baseball players like molecules!** 
@@ -19,37 +19,35 @@ Currently, `diamondfp` supports **binary fingerprint generation** for batting st
 
 ```python
 import pandas as pd
-from diamondfp.binary_fp import gen_feat_quants, binary_fp
-from diamondfp.scoring import jaccard
+from diamondfp.fingerprints import binaryfp, binnedfp
+from diamondfp.utils.features import generate_quantiles
+from diamondfp.scoring import jaccard, manhattan, cosine_sim
 
-df = pd.read_csv('career-stats.csv')
-basic_features = [
-    "2B",
-    "3B",
-    "RBI",
-    "SB",
-    "K%",
-    "BB%"
-]
-advanced_features = [
-    "H",
-    "HR",
-    "AVG",
-    "OBP",
-    "SLG",
-    "OPS",
-]
-basic_quants = [0.5, 0.75]
-advanced_quants = [0.5, 0.75, 0.9, 0.95]
+df = pd.read_csv("data/career-batting.csv")
 
+stat_features = {
+    "H": [0.5, 0.75, 0.9, 0.95],
+    "2B": [0.75, 0.95],
+    "3B": [0.75, 0.95],
+    "HR": [0.9, 0.99],
+    "K%": [0.1, 0.25],
+    "BB%": [0.75, 0.99],
+    "AVG": [0.5, 0.75, 0.9, 0.95],
+    "OBP": [0.5, 0.75, 0.9, 0.95],
+    "SLG": [0.5, 0.75, 0.9, 0.95],
+    "OPS": [0.5, 0.75, 0.9, 0.95],
+}
 
-feat_quants = gen_feat_quants(df, basic_features, advanced_features, basic_quants, advanced_quants)
-df['diamondFP'] = df.apply(lambda x: binary_fp(x, feat_quants), axis=1)
+feat_quants = generate_quantiles(df, stat_features)
 
-babe_ruth = df[df['Name'] == "Babe Ruth"]["diamondFP"].to_list()[0]
-shohei_ohtani = df[df['Name'] == "Shohei Ohtani"]["diamondFP"].to_list()[0]
+babe_ruth = binaryfp(df[df["Name"] == "Babe Ruth"].squeeze(), feat_quants)
+shohei_ohtani = binaryfp(df[df["Name"] == "Shohei Ohtani"].squeeze(), feat_quants)
 sim_score = jaccard(babe_ruth, shohei_ohtani)
-print(sim_score) # 0.86
+print(f"Jaccard score: {sim_score:0.2f}")  # 0.72
+cos_sim = cosine_sim(babe_ruth, shohei_ohtani)
+print(f"Cosine similarity: {cos_sim:0.2f}")  # 0.85
+man_dist = manhattan(babe_ruth, shohei_ohtani)
+print(f"Manhattan distance: {man_dist}")  # 5
 ```
 
 ## Example Data Source
@@ -60,9 +58,9 @@ licensed under Creative Commons BY-SA 3.0.
 ### Roadmap
 
 - [X] Binary vector fingerprints
-- [] Binned fingerprints
-- [] Clustering and visualization tools
-- [] PyPI release
+- [X] Binned fingerprints
+- [ ] Clustering and visualization tools
+- [ ] PyPI release
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/dlf57/diamondfp/blob/main/LICENSE) file for details.

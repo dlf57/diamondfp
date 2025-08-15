@@ -5,6 +5,7 @@ def tanimoto(v1, v2):
     """
     Calculates the tanimoto coefficent between the two fingerprints
     Exact same as Jaccard score but tanimoto for those familiar with cheminformatics
+    **want closer to 1**
 
     Parameters
     ---------
@@ -29,6 +30,7 @@ def jaccard(v1, v2):
     """
     Calculates the Jaccard score between the two fingerprints
     Exact same as tanimoto but for those not familiar with cheminformatics
+    **want closer to 1**
 
     Parameters
     ---------
@@ -47,3 +49,49 @@ def jaccard(v1, v2):
     c = np.sum(v1 & v2)
     u = np.sum(v1 | v2)
     return c / u if u != 0 else 0
+
+
+def manhattan(v1, v2):
+    """
+    Calculates the manhattan distance between the two fingerprints
+    **want non-negative, smaller value**
+
+    Parameters
+    ---------
+    v1: list
+        fingerprint of player 1
+    v2: list
+        fingeprint of player 2
+
+    Returns
+    -------
+    score: float
+        manhattan distance
+    """
+    v1 = np.array(v1, dtype=int)
+    v2 = np.array(v2, dtype=int)
+    distance = np.sum(np.abs(np.array(v1) - np.array(v2)))
+    return distance
+
+
+def cosine_sim(v1, v2):
+    """
+    Calculates the cosine similarity between the two fingerprints
+    **want closer to 1**
+
+    Parameters
+    ---------
+    v1: list
+        fingerprint of player 1
+    v2: list
+        fingeprint of player 2
+
+    Returns
+    -------
+    score: float
+        cosine similarity
+    """
+    v1 = np.array(v1, dtype=int)
+    v2 = np.array(v2, dtype=int)
+    similarity = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+    return similarity
