@@ -2,5 +2,5 @@
 Initialze functions
 """
 
-from . import binary_fp
+from . import fingerprints
 from . import scoring
