@@ -11,7 +11,7 @@ def generate_quantiles(df, stat_features):
 
     Parameters
     ---------
-    df: pandas DataFrame
+    df: DataFrame
         dataframe to calc quantiles from
     stat_features: dict
         dictionary containing stats and quantiles of interest

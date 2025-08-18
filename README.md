@@ -7,7 +7,7 @@
 
 `diamondfp` is a Python library for generating **statistical fingerprints** of baseball players, enabling similarity searches much like molecular similarity in chemistry. By encoding player performance into binary feature vectors, you can compare players across eras and styles using metrics like the **Tanimoto coefficient/Jaccard Score**.  
 
-Currently, `diamondfp` supports **binary fingerprint generation** for batting stats, with pitching and fielding fingerprints in development.  
+Currently, `diamondfp` supports **binary and binned fingerprint generation** for batting stats, with pitching and fielding fingerprints in development.  
 
 ## Features  
 - Create binary statistical fingerprints from player performance data  
