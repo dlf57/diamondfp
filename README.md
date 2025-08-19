@@ -50,7 +50,9 @@ man_dist = manhattan(babe_ruth, shohei_ohtani)
 print(f"Manhattan distance: {man_dist}")  # 5
 ```
 
-## Example Data Source
+## Example Usage
+
+Examples to how to use `diamondfp` can be found [here](https://github.com/dlf57/diamondfp/blob/main/examples/examples.md)!
 
 Example notebooks use the Lahman Baseball Database,
 licensed under Creative Commons BY-SA 3.0.
@@ -59,7 +61,7 @@ licensed under Creative Commons BY-SA 3.0.
 
 - [X] Binary vector fingerprints
 - [X] Binned fingerprints
-- [ ] Clustering and visualization tools
+- [X] Clustering and visualization tools
 - [ ] PyPI release
 
 ## License
