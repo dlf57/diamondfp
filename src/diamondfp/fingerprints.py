@@ -17,7 +17,7 @@ def binaryfp(row, feat_quants):
 
     Parameters
     ---------
-    row: pandas row
+    row: row dict
         row of player information (e.g. AVG, OPS, etc.)
     feat_quants: dict
         dictionary of features and their quantiles
@@ -55,7 +55,7 @@ def binnedfp(row, feat_quants):
 
     Parameters
     ---------
-    row: pandas row
+    row: row dict
         row of player information (e.g. AVG, OPS, etc.)
     feat_quants: dict
         dictionary of features and their quantiles
@@ -65,6 +65,7 @@ def binnedfp(row, feat_quants):
     binned_fp: list
         binned fingerprint list
     """
+
     binned_fp = []
     for fkey, quants in feat_quants.items():
         val_bin = [0] * len(quants)
