@@ -33,3 +33,38 @@ def generate_quantiles(df, stat_features):
         feat_quants[feat] = feat_v
 
     return feat_quants
+
+
+def feature_scaling(df, features, method="zscore"):
+    """
+    Generate feature scaling parameters for normalization
+
+    Parameters
+    ---------
+    df: DataFrame
+        dataframe to calc quantiles from
+    features: list
+        list of features to scale
+    method: str
+        method of scaling to use (minmax or zscore)
+
+    Returns
+    -------
+    feat_scaling: dict
+        dictionary of features and their scaling parameters
+    """
+
+    feat_scaling = {}
+    for feat in features:
+        if method == "minmax":
+            min_v = df[feat].min()
+            max_v = df[feat].max()
+            feat_scaling[feat] = (min_v, max_v)
+        elif method == "zscore":
+            mean_v = df[feat].mean()
+            std_v = df[feat].std()
+            feat_scaling[feat] = (mean_v, std_v)
+        else:
+            raise ValueError("Invalid scaling method. Use 'minmax' or 'zscore'.")
+
+    return feat_scaling

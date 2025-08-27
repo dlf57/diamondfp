@@ -68,8 +68,8 @@ def manhattan(v1, v2):
     score: float
         manhattan distance
     """
-    v1 = np.array(v1, dtype=int)
-    v2 = np.array(v2, dtype=int)
+    v1 = np.array(v1, dtype=float)
+    v2 = np.array(v2, dtype=float)
     distance = np.sum(np.abs(np.array(v1) - np.array(v2)))
     return distance
 
@@ -91,7 +91,7 @@ def cosine_sim(v1, v2):
     score: float
         cosine similarity
     """
-    v1 = np.array(v1, dtype=int)
-    v2 = np.array(v2, dtype=int)
+    v1 = np.array(v1, dtype=float)
+    v2 = np.array(v2, dtype=float)
     similarity = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
     return similarity

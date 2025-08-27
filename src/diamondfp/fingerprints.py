@@ -76,3 +76,45 @@ def binnedfp(row, feat_quants):
         binned_fp.extend(val_bin)
 
     return binned_fp
+
+
+def normalizedfp(row, feat_scaling, method="zscore"):
+    """
+    Function for creating a normalized fingerprint based provided scaling
+    of features.
+
+    Parameters
+    ---------
+    row: row dict
+        row of player information (e.g. AVG, OPS, etc.)
+    feat_scaling: dict
+        dictionary of features and their scaling parameters
+    method: str
+        method of scaling to use (minmax or zscore)
+
+    Returns
+    -------
+    norm_fp: list
+        normalized fingerprint list
+    """
+
+    norm_fp = []
+    for fkey, params in feat_scaling.items():
+        if method == "minmax":
+            min_v, max_v = params
+            if max_v - min_v == 0:
+                norm_v = 0.0
+            else:
+                norm_v = (row[fkey] - min_v) / (max_v - min_v)
+        elif method == "zscore":
+            mean_v, std_v = params
+            if std_v == 0:
+                norm_v = 0.0
+            else:
+                norm_v = (row[fkey] - mean_v) / std_v
+        else:
+            raise ValueError("Invalid scaling method. Use 'minmax' or 'zscore'.")
+
+        norm_fp.append(norm_v)
+
+    return norm_fp
