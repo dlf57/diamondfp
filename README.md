@@ -1,6 +1,9 @@
 <center><img src='diamondfp.png' width='20%'></center>
 
 # diamondfp
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![codecov](https://codecov.io/github/dlf57/diamondfp/graph/badge.svg?token=PMP8Y7FK08)](https://codecov.io/github/dlf57/diamondfp)
+
 **Comparing baseball players like molecules!** 
 
 **Statistical fingerprints for baseball players — find their closest matches.**  
