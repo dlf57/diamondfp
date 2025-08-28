@@ -16,6 +16,29 @@ def test_binnedfp():
     assert binnedfp(row, feat_quants) == expected_fp
 
 
+def test_binnedfp_highest_quantile():
+    row = {"AVG": 0.305}
+    feat_quants = {"AVG": [0.250, 0.275, 0.300]}  # highest quantile is 0.300
+    result = binnedfp(row, feat_quants)
+    # Only highest quantile matches
+    assert result == [0, 0, 1]
+
+
+def test_binnedfp_lowest_quantile():
+    row = {"AVG": 0.260}
+    feat_quants = {"AVG": [0.250, 0.275, 0.300]}
+    result = binnedfp(row, feat_quants)
+    # Only lowest quantile matches
+    assert result == [1, 0, 0]
+
+
+def test_binnedfp_no_match():
+    row = {"AVG": 0.200}
+    feat_quants = {"AVG": [0.250, 0.275, 0.300]}
+    result = binnedfp(row, feat_quants)
+    assert result == [0, 0, 0]
+
+
 def test_normalizedfp_minmax():
     row = {"AVG": 0.298, "HR": 250}
     feat_scaling = {"AVG": (0.200, 0.350), "HR": (0, 700)}
