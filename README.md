@@ -70,8 +70,8 @@ licensed under Creative Commons BY-SA 3.0.
 - [X] Binary vector fingerprints
 - [X] Binned fingerprints
 - [X] Clustering and visualization tools
-- [ ] Clean up examples
-- [ ] Code coverage
+- [X] Clean up examples
+- [X] Code coverage
 - [ ] PyPI release
 
 ## License
