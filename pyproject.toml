@@ -11,6 +11,8 @@ requires-python = ">=3.8"
 license = "MIT"
 dependencies = [
     "numpy",
+    "pandas",
+    "scikit-learn",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
