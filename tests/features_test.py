@@ -1,6 +1,7 @@
 import pytest
 import numpy as np
-from diamondfp.utils.features import generate_quantiles, feature_scaling
+import pandas as pd
+from diamondfp.utils.features import generate_quantiles, feature_scaling, create_archetypes
 
 
 def test_generate_quantiles_basic():
@@ -46,3 +47,23 @@ def test_feature_scaling_invalid_method():
     test_data = {"OPS": [0.8, 0.9, 1.0]}
     with pytest.raises(ValueError):
         feature_scaling(test_data, ["OPS"], method="invalid")
+
+
+def test_create_archetypes():
+    # Create random data
+    data = pd.DataFrame({
+        "A": np.random.rand(20),
+        "B": np.random.rand(20),
+        "C": np.random.rand(20) # nuisance col
+    })
+    
+    features = ["A", "B"]
+    k = 3
+    
+    archetypes = create_archetypes(data, features, k=k)
+    
+    assert isinstance(archetypes, pd.DataFrame)
+    assert archetypes.shape == (3, 2)
+    assert list(archetypes.columns) == features
+    assert "Archetype_0" in archetypes.index
+

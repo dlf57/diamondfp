@@ -2,6 +2,9 @@
 Fingerprint functions
 """
 
+import numpy as np
+
+
 
 def binaryfp(row, feat_quants):
     """
@@ -118,3 +121,88 @@ def normalizedfp(row, feat_scaling, method="zscore"):
         norm_fp.append(norm_v)
 
     return norm_fp
+
+
+def percentilefp(row, feat_distros):
+    """
+    Function for creating a fingerprint based on the percentile rank of each
+    feature within a provided distribution.
+
+    Parameters
+    ---------
+    row: row dict
+        row of player information
+    feat_distros: dict of lists/arrays
+        dictionary of features and their reference distributions (e.g. all players' stats)
+
+    Returns
+    -------
+    perc_fp: list
+        list of percentile ranks (0.0 to 1.0)
+    """
+    perc_fp = []
+    for fkey, distro in feat_distros.items():
+        val = row[fkey]
+        # Calculate percentile rank: fraction of distribution strictly less than value
+        # We use numpy for efficiency if available, otherwise pure python
+        if isinstance(distro, (list, tuple)):
+            distro = np.array(distro)
+        
+        # logical comparison returns boolean array, mean gives fraction of True
+        rank = (distro < val).mean()
+        perc_fp.append(rank)
+    
+    return perc_fp
+
+
+def archetypefp(row, archetypes):
+    """
+    Function for creating a fingerprint based on distances to defined archetypes.
+
+    Parameters
+    ---------
+    row: row dict
+        row of player information
+    archetypes: dict or pd.DataFrame
+        Dictionary or DataFrame where keys/columns are features and 
+        values/rows represent the centroid of an archetype.
+        If DataFrame, index should be archetype names.
+        If dict, keys should be archetype names and values dict of {feature: value}.
+
+    Returns
+    -------
+    arch_fp: list
+        Vector of distances to each archetype.
+    """
+    import pandas as pd
+    
+    arch_fp = []
+    
+    # helper to extract feature vector from row matching archetype features
+    def get_vec(target_dict, features):
+        return [target_dict[f] for f in features]
+
+    if isinstance(archetypes, pd.DataFrame):
+        # iterate through rows
+        features = archetypes.columns.tolist()
+        player_vec = get_vec(row, features)
+        
+        for idx, arch_row in archetypes.iterrows():
+            arch_vec = arch_row.values
+            # Euclidean distance
+            dist = np.linalg.norm(np.array(player_vec) - np.array(arch_vec))
+            arch_fp.append(dist)
+            
+    elif isinstance(archetypes, dict):
+        # Assume dict of {arch_name: {feat: val, ...}}
+        first_arch = next(iter(archetypes.values()))
+        features = list(first_arch.keys())
+        player_vec = get_vec(row, features)
+        
+        for name, arch_data in archetypes.items():
+            arch_vec = get_vec(arch_data, features)
+            dist = np.linalg.norm(np.array(player_vec) - np.array(arch_vec))
+            arch_fp.append(dist)
+            
+    return arch_fp
+

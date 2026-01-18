@@ -69,4 +69,44 @@ def feature_scaling(data, features, method="zscore"):
         else:
             raise ValueError("Invalid scaling method. Use 'minmax' or 'zscore'.")
 
+
     return feat_scaling
+
+
+def create_archetypes(data, features, k=5, method="kmeans"):
+    """
+    Helper function to generate archetypes from a dataset.
+
+    Parameters
+    ---------
+    data: pd.DataFrame
+        DataFrame of player stats
+    features: list
+        List of feature names to use
+    k: int
+        Number of archetypes to find
+    method: str
+        Clustering method (currently only 'kmeans')
+
+    Returns
+    -------
+    archetypes: pd.DataFrame
+        DataFrame of archetype centroids
+    """
+    from sklearn.cluster import KMeans
+    import pandas as pd
+    
+    X = data[features].dropna()
+    
+    if method == "kmeans":
+        kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+        kmeans.fit(X)
+        centroids = kmeans.cluster_centers_
+        
+        # Create meaningful names or just indices
+        archetypes = pd.DataFrame(centroids, columns=features)
+        archetypes.index = [f"Archetype_{i}" for i in range(k)]
+        
+        return archetypes
+    else:
+        raise ValueError("Method not supported. Use 'kmeans'.")

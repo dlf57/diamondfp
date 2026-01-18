@@ -1,5 +1,7 @@
 import pytest
-from diamondfp.fingerprints import binaryfp, binnedfp, normalizedfp
+import pandas as pd
+import numpy as np
+from diamondfp.fingerprints import binaryfp, binnedfp, normalizedfp, percentilefp, archetypefp
 
 
 def test_binaryfp():
@@ -72,3 +74,50 @@ def test_normalizedfp_invalid_method():
     feat_scaling = {"AVG": (0.200, 0.350), "HR": (0, 700)}
     with pytest.raises(ValueError):
         normalizedfp(row, feat_scaling, method="invalid")
+
+
+def test_percentilefp():
+    # Setup simple mock distribution: integers 0 to 99
+    distros = {
+        "stat1": list(range(100)),
+        "stat2": list(range(100))
+    }
+    
+    row = {"stat1": 50, "stat2": 99.5} # 99.5 is > 99, so rank should be 1.0
+    
+    fp = percentilefp(row, distros)
+    
+    assert len(fp) == 2
+    assert fp[0] == 0.5  # 50 items < 50 out of 100
+    assert fp[1] == 1.0  # all 100 items < 99.5
+
+
+def test_archetypefp_dict():
+    # Setup archetypes as dict
+    archetypes = {
+        "Low": {"stat1": 0, "stat2": 0},
+        "High": {"stat1": 10, "stat2": 10}
+    }
+    
+    row = {"stat1": 0, "stat2": 0}
+    fp = archetypefp(row, archetypes)
+    
+    assert len(fp) == 2
+    assert fp[0] == 0.0 # Distance to Low
+    assert np.isclose(fp[1], np.sqrt(200)) # Distance to High (10^2 + 10^2)
+
+
+def test_archetypefp_df():
+    # Setup archetypes as DataFrame
+    df_data = {
+        "stat1": [0, 10],
+        "stat2": [0, 10]
+    }
+    archetypes = pd.DataFrame(df_data, index=["Low", "High"])
+    
+    row = {"stat1": 0, "stat2": 0}
+    fp = archetypefp(row, archetypes)
+    
+    assert len(fp) == 2
+    assert fp[0] == 0.0
+    assert np.isclose(fp[1], np.sqrt(200))
